@@ -21,4 +21,5 @@ client.on('messageCreate', message => {
   }
 });
 
+console.log("TOKEN existe?", !!process.env.TOKEN);
 client.login(process.env.TOKEN);
