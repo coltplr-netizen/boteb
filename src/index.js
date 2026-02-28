@@ -127,6 +127,96 @@ client.once('clientReady', () => {
   console.log(`🤖 Bot online como ${client.user.tag}`);
 });
 
+client.on('interactionCreate', async (interaction) => {
+
+  // SLASH COMMAND
+  if (interaction.isChatInputCommand()) {
+
+    if (interaction.commandName === 'painelverificacao') {
+
+      const canal = interaction.options.getChannel('canal');
+
+      const embed = {
+        title: '🔐 Painel de Verificação',
+        description: 'Clique no botão abaixo para iniciar sua verificação.',
+        color: 0x2b2d31
+      };
+
+      const row = {
+        type: 1,
+        components: [
+          {
+            type: 2,
+            label: 'Começar Verificação',
+            style: 1,
+            custom_id: 'start_verification'
+          }
+        ]
+      };
+
+      await canal.send({ embeds: [embed], components: [row] });
+
+      await interaction.reply({ content: '✅ Painel enviado!', flags: 64 });
+    }
+  }
+
+  // BOTÃO
+  if (interaction.isButton()) {
+
+    if (interaction.customId === 'start_verification') {
+
+      const guild = interaction.guild;
+
+      const ticket = await guild.channels.create({
+        name: `verificacao-${interaction.user.id}`,
+        type: 0,
+        permissionOverwrites: [
+          {
+            id: guild.id,
+            deny: ['ViewChannel']
+          },
+          {
+            id: interaction.user.id,
+            allow: ['ViewChannel', 'SendMessages']
+          }
+        ]
+      });
+
+      // GERAR CÓDIGO
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
+
+      await Verification.create({
+        discordId: interaction.user.id,
+        code: code
+      });
+
+      const embed = {
+        title: '🔐 Verificação',
+        description:
+`Olá ${interaction.user},
+
+Seja bem-vindo ao nosso painel de verificação!
+
+⚠️ Este código pode ser usado apenas uma vez.
+Não compartilhe com ninguém.
+
+Seu código é:
+
+\`\`\`
+${code}
+\`\`\`
+`,
+        color: 0x2b2d31
+      };
+
+      await ticket.send({ content: `${interaction.user}`, embeds: [embed] });
+
+      await interaction.reply({ content: `✅ Ticket criado: ${ticket}`, flags: 64 });
+    }
+  }
+
+});
+
 // =======================
 // LOGIN
 // =======================
