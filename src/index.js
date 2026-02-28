@@ -164,10 +164,22 @@ client.on(Events.InteractionCreate, async interaction => {
 
       const row = new ActionRowBuilder().addComponents(startButton);
 
-      await channel.send({
-        content: `👋 Olá ${member}, clique no botão abaixo para começar sua verificação.`,
-        components: [row]
-      });
+      const embedInicio = new EmbedBuilder()
+  .setTitle('🔐 Painel de Verificação')
+  .setDescription(
+    `Olá ${member}, seja bem-vindo ao nosso painel de verificação!\n\n` +
+    `Para garantir a segurança do sistema, informamos que o código gerado poderá ser utilizado para verificar **apenas uma única pessoa**.\n\n` +
+    `⚠️ **Atenção:** Caso você compartilhe o código com outra pessoa, a verificação falhará automaticamente e será necessário aguardar a análise manual da nossa equipe.\n\n` +
+    `Portanto, mantenha seu código em segurança e não o compartilhe com ninguém.\n\n` +
+    `Clique no botão abaixo para iniciar sua verificação.`
+  )
+  .setColor(0x2b2d31)
+  .setFooter({ text: 'Sistema automático de verificação' });
+
+await channel.send({
+  embeds: [embedInicio],
+  components: [row]
+});
 
       await interaction.reply({
         content: `✅ Seu ticket foi criado em ${channel}`,
