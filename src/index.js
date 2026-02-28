@@ -1,6 +1,8 @@
 require('dotenv').config();
 
 const express = require('express');
+const crypto = require('crypto');
+
 const {
   Client,
   GatewayIntentBits,
@@ -40,15 +42,12 @@ app.listen(PORT, () => {
 // =======================
 
 const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds
-  ]
+  intents: [GatewayIntentBits.Guilds]
 });
 
 client.once('ready', async () => {
   console.log(`🤖 Bot online como ${client.user.tag}`);
 
-  // Registrar slash command automaticamente
   const commands = [
     new SlashCommandBuilder()
       .setName('painelverificacao')
@@ -159,9 +158,17 @@ client.on(Events.InteractionCreate, async interaction => {
         ]
       });
 
+      // Gerar código seguro (8 caracteres reais)
+      const code = crypto.randomBytes(4).toString('hex').toUpperCase();
+
       const embed = new EmbedBuilder()
         .setTitle('🔐 Verificação Iniciada')
-        .setDescription('Seu ticket foi criado.\nEm breve enviaremos seu código aqui.')
+        .setDescription(
+          `Seu código de verificação é:\n\n` +
+          `\`\`\`\n${code}\n\`\`\`\n\n` +
+          `Use este código no jogo do Roblox.\n` +
+          `⚠️ Este código poderá ser usado apenas uma vez.`
+        )
         .setColor(0x00ff00);
 
       await channel.send({ embeds: [embed] });
