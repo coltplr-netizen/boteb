@@ -201,21 +201,21 @@ ${code}
       const embed3 = {
         title: "📘 Passo 2",
         description: "Copie o código que foi enviado.",
-        image: { url: "https://cdn.discordapp.com/attachments/1477372605949280256/1477373775182827571/content.png?ex=69a4870c&is=69a3358c&hm=e312c4347b7b216b1bc490927996482add608744093a3883626a80b94a21b599&" },
+        image: { url: "https://cdn.discordapp.com/attachments/1477374566341808309/1477375869017391216/image.png?ex=69a488ff&is=69a3377f&hm=ded1cec6af1fdad3e338fc5d2817859c83be8604dd9a1c748213b876a95ee899&" },
         color: 0x2b2d31
       };
 
       const embed4 = {
         title: "📘 Passo 3",
         description: "Cole o código no campo indicado.",
-        image: { url: "https://cdn.discordapp.com/attachments/1477372605949280256/1477373775711436822/Sem_titulo2.png?ex=69a4870c&is=69a3358c&hm=be9e6758b9b477d6f21d1b0e5dbf1c909d04185c437add49fffdd64d39e62f33&" },
+        image: { url: "https://cdn.discordapp.com/attachments/1477374566341808309/1477376095404818533/image.png?ex=69a48935&is=69a337b5&hm=76f5a862314017cf415de6374648762093e903fc708f24008d1f58948025eec5&" },
         color: 0x2b2d31
       };
 
       const embed5 = {
         title: "📘 Finalização",
         description: "Clique no botão 'Verificar' e pronto.",
-        image: { url: "https://cdn.discordapp.com/attachments/1477372605949280256/1477373776336523315/Sem_titulo.png?ex=69a4870c&is=69a3358c&hm=c2e832beff34546305002612d1adbde26f253bd930cb1164bfe8cdbe78155a1e&" },
+        image: { url: "https://cdn.discordapp.com/attachments/1477374566341808309/1477376095857934529/image.png?ex=69a48935&is=69a337b5&hm=367c3e7c55c30de01db27ecd4fa24ab510d351f12cee50a1b7e837ecd9a98693&" },
         color: 0x2b2d31
       };
 
