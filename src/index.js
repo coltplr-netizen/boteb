@@ -13,6 +13,7 @@ const {
 const express = require('express');
 const mongoose = require('mongoose');
 
+
 // ==========================
 // CLIENT
 // ==========================
@@ -23,6 +24,7 @@ const client = new Client({
     GatewayIntentBits.GuildMembers
   ]
 });
+
 
 // ==========================
 // MONGODB
@@ -41,6 +43,7 @@ const verificationSchema = new mongoose.Schema({
 });
 
 const Verification = mongoose.model("Verification", verificationSchema);
+
 
 // ==========================
 // SLASH COMMAND
@@ -67,15 +70,6 @@ async function registerCommands() {
   console.log("✅ Slash command registrado.");
 }
 
-// ==========================
-// FUNÇÃO AUXILIAR PARA ENVIAR EMBED + IMAGEM FORA
-// ==========================
-
-async function sendEmbedWithImage(ticket, embed) {
-  const { image, ...embedNoImage } = embed;
-  if (embedNoImage) await ticket.send({ embeds: [embedNoImage] });
-  if (image) await ticket.send({ content: image.url });
-}
 
 // ==========================
 // INTERAÇÕES
@@ -113,10 +107,11 @@ client.on('interactionCreate', async (interaction) => {
 
       await interaction.reply({
         content: '✅ Painel enviado com sucesso.',
-        ephemeral: true
+        flags: 64
       });
     }
   }
+
 
   // =====================
   // BOTÃO
@@ -128,9 +123,6 @@ client.on('interactionCreate', async (interaction) => {
 
       const guild = interaction.guild;
 
-      // RESPONDE IMEDIATAMENTE PARA EVITAR ERRO "INTERACTION FAILED"
-      await interaction.deferReply({ ephemeral: true });
-
       // impedir discord já verificado
       const alreadyVerified = await Verification.findOne({
         discordId: interaction.user.id,
@@ -138,8 +130,9 @@ client.on('interactionCreate', async (interaction) => {
       });
 
       if (alreadyVerified) {
-        return interaction.editReply({
-          content: "❌ Você já está verificado."
+        return interaction.reply({
+          content: "❌ Você já está verificado.",
+          flags: 64
         });
       }
 
@@ -149,8 +142,9 @@ client.on('interactionCreate', async (interaction) => {
       );
 
       if (existing) {
-        return interaction.editReply({
-          content: `Você já possui um ticket aberto: ${existing}`
+        return interaction.reply({
+          content: `Você já possui um ticket aberto: ${existing}`,
+          flags: 64
         });
       }
 
@@ -174,7 +168,6 @@ client.on('interactionCreate', async (interaction) => {
         ]
       });
 
-      // gera código único
       const code = Math.floor(100000 + Math.random() * 900000).toString();
 
       await Verification.create({
@@ -183,7 +176,7 @@ client.on('interactionCreate', async (interaction) => {
       });
 
       // =====================
-      // EMBEDS
+      // EMBED 1 - CÓDIGO
       // =====================
 
       const embed1 = {
@@ -202,54 +195,73 @@ ${code}
         color: 0x2b2d31
       };
 
+      // =====================
+      // EMBED 2 - TUTORIAL 1
+      // =====================
+
       const embed2 = {
         title: "📘 Passo 1",
-        description: "Entre no jogo e abra o painel de verificação clicando no botão abaixo.",
-        image: { url: "https://cdn.discordapp.com/attachments/1477372605949280256/1477373774759465133/image.png?ex=69a4870c&is=69a3358c&hm=63cefb4faa89f1c74913a7ee8ff11e43fe68ee680f28348b778e211f234e31d5&" },
+        description: "Entre no jogo e abra o painel de verificação apertando no botão abaixo.",
+        image: {
+          url: "https://cdn.discordapp.com/attachments/1477372605949280256/1477373774759465133/image.png?ex=69a4870c&is=69a3358c&hm=63cefb4faa89f1c74913a7ee8ff11e43fe68ee680f28348b778e211f234e31d5&"
+        },
         color: 0x2b2d31
       };
+
+      // =====================
+      // EMBED 3 - TUTORIAL 2
+      // =====================
 
       const embed3 = {
         title: "📘 Passo 2",
         description: "Copie o código que foi enviado.",
-        image: { url: "https://cdn.discordapp.com/attachments/1477377208694739167/1477377996766707733/image.png?ex=69a48afa&is=69a3397a&hm=34934fb3e4e9adce077653f66d2bcc874346e50a64f82eec49c38f9757a5037e&" },
+        image: {
+          url: "https://cdn.discordapp.com/attachments/1477378700600283326/1477379476387270747/image.png?ex=69a48c5b&is=69a33adb&hm=0504ef49e0116f9d2f8c94c1420eb24c361e97b7bf43b60f132aff2932b6d2e3&"
+        },
         color: 0x2b2d31
       };
+
+      // =====================
+      // EMBED 4 - TUTORIAL 3
+      // =====================
 
       const embed4 = {
         title: "📘 Passo 3",
-        description: "Cole o código no campo indicado.",
-        image: { url: "https://cdn.discordapp.com/attachments/1477374566341808309/1477376095404818533/image.png?ex=69a48935&is=69a337b5&hm=76f5a862314017cf415de6374648762093e903fc708f24008d1f58948025eec5&" },
+        description: "Coloque o código no campo indicado.",
+        image: {
+          url: "https://cdn.discordapp.com/attachments/1477374566341808309/1477376095404818533/image.png?ex=69a48935&is=69a337b5&hm=76f5a862314017cf415de6374648762093e903fc708f24008d1f58948025eec5&"
+        },
         color: 0x2b2d31
       };
+
+      // =====================
+      // EMBED 5 - TUTORIAL 4
+      // =====================
 
       const embed5 = {
         title: "📘 Finalização",
-        description: "Clique no botão 'Verificar' e pronto.",
-        image: { url: "https://cdn.discordapp.com/attachments/1477374566341808309/1477376095857934529/image.png?ex=69a48935&is=69a337b5&hm=367c3e7c55c30de01db27ecd4fa24ab510d351f12cee50a1b7e837ecd9a98693&" },
+        description: "Aperte no botão 'Verificar' e pronto.",
+        image: {
+          url: "https://cdn.discordapp.com/attachments/1477374566341808309/1477376095857934529/image.png?ex=69a48935&is=69a337b5&hm=367c3e7c55c30de01db27ecd4fa24ab510d351f12cee50a1b7e837ecd9a98693&"
+        },
         color: 0x2b2d31
       };
 
-      // =====================
-      // ENVIO DOS EMBEDS E IMAGENS
-      // =====================
-
       await ticket.send({ content: `${interaction.user}`, embeds: [embed1] });
+      await ticket.send({ embeds: [embed2] });
+      await ticket.send({ embeds: [embed3] });
+      await ticket.send({ embeds: [embed4] });
+      await ticket.send({ embeds: [embed5] });
 
-      await sendEmbedWithImage(ticket, embed2);
-      await sendEmbedWithImage(ticket, embed3);
-      await sendEmbedWithImage(ticket, embed4);
-      await sendEmbedWithImage(ticket, embed5);
-
-      // finaliza interação do botão
-      await interaction.editReply({
-        content: `✅ Ticket criado: ${ticket}`
+      await interaction.reply({
+        content: `✅ Ticket criado: ${ticket}`,
+        flags: 64
       });
-
     }
   }
 
 });
+
 
 // ==========================
 // API EXPRESS
@@ -309,6 +321,7 @@ app.post('/api/redeem', async (req, res) => {
   }
 
 });
+
 
 // ==========================
 // START
