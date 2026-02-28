@@ -203,7 +203,7 @@ ${code}
         title: "📘 Passo 1",
         description: "Entre no jogo e abra o painel de verificação clicando no botão abaixo.",
         image: {
-          url: "https://imgur.com/Qh4I3iG"
+          url: "https://media.discordapp.net/attachments/1477369538600501319/1477369721635471534/image.png?ex=69a48345&is=69a331c5&hm=b3d67315a79116f437532edb48d9a6bbb2fb38a694af238f4067ddcf1ff43a39&=&format=webp&quality=lossless"
         },
         color: 0x2b2d31
       };
@@ -216,7 +216,7 @@ ${code}
         title: "📘 Passo 2",
         description: "Copie o código que foi enviado.",
         image: {
-          url: "https://imgur.com/BAKkznc"
+          url: "https://media.discordapp.net/attachments/1477369538600501319/1477369721941921804/content.png?ex=69a48345&is=69a331c5&hm=412c9bac314a195d29bee5b9390818f5a0b59459ff94c7b1640e8da58b6184ce&=&format=webp&quality=lossless"
         },
         color: 0x2b2d31
       };
@@ -229,7 +229,7 @@ ${code}
         title: "📘 Passo 3",
         description: "Cole o código no campo indicado.",
         image: {
-          url: "https://imgur.com/ZITKEg3"
+          url: "https://media.discordapp.net/attachments/1477369538600501319/1477369722247971048/Sem_titulo2.png?ex=69a48345&is=69a331c5&hm=0c0a80e109d1c964d03dc638bbd7f02eb5b5b45347fc71a910ad48f5d004d9c8&=&format=webp&quality=lossless"
         },
         color: 0x2b2d31
       };
@@ -242,7 +242,7 @@ ${code}
         title: "📘 Finalização",
         description: "Clique no botão 'Verificar' e pronto.",
         image: {
-          url: "https://imgur.com/Nb1Atvl"
+          url: "https://media.discordapp.net/attachments/1477369538600501319/1477369722570801222/Sem_titulo.png?ex=69a48346&is=69a331c6&hm=8a841890697d3d584e2b485c4b8a883fb3f84b02d81cd8d0d0e1bcdae7483ed0&=&format=webp&quality=lossless"
         },
         color: 0x2b2d31
       };
