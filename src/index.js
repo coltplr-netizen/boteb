@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const crypto = require('crypto');
+const mongoose = require('mongoose');
 
 const {
   Client,
@@ -38,6 +39,25 @@ app.listen(PORT, () => {
 
 
 // =======================
+// MONGODB
+// =======================
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('🗄️ Conectado ao MongoDB'))
+  .catch(err => console.error('Erro ao conectar no Mongo:', err));
+
+const verificationSchema = new mongoose.Schema({
+  code: { type: String, required: true, unique: true },
+  discordId: { type: String, required: true },
+  used: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now },
+  expiresAt: { type: Date, required: true }
+});
+
+const Verification = mongoose.model('Verification', verificationSchema);
+
+
+// =======================
 // DISCORD BOT
 // =======================
 
@@ -62,7 +82,6 @@ client.once('ready', async () => {
       Routes.applicationCommands(client.user.id),
       { body: commands }
     );
-
     console.log('✅ Slash command registrado.');
   } catch (error) {
     console.error(error);
@@ -110,9 +129,9 @@ client.on(Events.InteractionCreate, async interaction => {
     const guild = interaction.guild;
     const member = interaction.member;
 
-    // ===================================
-    // BOTÃO 1 - CRIAR TICKET
-    // ===================================
+    // =============================
+    // CRIAR TICKET
+    // =============================
     if (interaction.customId === 'iniciar_verificacao') {
 
       let category = guild.channels.cache.find(
@@ -165,21 +184,19 @@ client.on(Events.InteractionCreate, async interaction => {
       const row = new ActionRowBuilder().addComponents(startButton);
 
       const embedInicio = new EmbedBuilder()
-  .setTitle('🔐 Painel de Verificação')
-  .setDescription(
-    `Olá ${member}, seja bem-vindo ao nosso painel de verificação!\n\n` +
-    `Para garantir a segurança do sistema, informamos que o código gerado poderá ser utilizado para verificar **apenas uma única pessoa**.\n\n` +
-    `⚠️ **Atenção:** Caso você compartilhe o código com outra pessoa, a verificação falhará automaticamente e será necessário aguardar a análise manual da nossa equipe.\n\n` +
-    `Portanto, mantenha seu código em segurança e não o compartilhe com ninguém.\n\n` +
-    `Clique no botão abaixo para iniciar sua verificação.`
-  )
-  .setColor(0x2b2d31)
-  .setFooter({ text: 'Sistema automático de verificação' });
+        .setTitle('🔐 Painel de Verificação')
+        .setDescription(
+          `Olá ${member}, seja bem-vindo ao nosso painel de verificação!\n\n` +
+          `O código gerado poderá ser utilizado para verificar **apenas uma única pessoa**.\n\n` +
+          `⚠️ Caso você compartilhe o código com outra pessoa, a verificação falhará automaticamente e será necessário aguardar análise manual da equipe.\n\n` +
+          `Clique no botão abaixo para iniciar sua verificação.`
+        )
+        .setColor(0x2b2d31);
 
-await channel.send({
-  embeds: [embedInicio],
-  components: [row]
-});
+      await channel.send({
+        embeds: [embedInicio],
+        components: [row]
+      });
 
       await interaction.reply({
         content: `✅ Seu ticket foi criado em ${channel}`,
@@ -187,25 +204,46 @@ await channel.send({
       });
     }
 
-    // ===================================
-    // BOTÃO 2 - GERAR CÓDIGO
-    // ===================================
+    // =============================
+    // GERAR CÓDIGO
+    // =============================
     if (interaction.customId === 'comecar_verificacao') {
 
+      const existingCode = await Verification.findOne({
+        discordId: interaction.user.id,
+        used: false,
+        expiresAt: { $gt: new Date() }
+      });
+
+      if (existingCode) {
+        return interaction.reply({
+          content: `Você já possui um código ativo:\n\n\`\`\`\n${existingCode.code}\n\`\`\``,
+          ephemeral: true
+        });
+      }
+
       const code = crypto.randomBytes(4).toString('hex').toUpperCase();
+      const expires = new Date(Date.now() + 10 * 60 * 1000);
+
+      await Verification.create({
+        code: code,
+        discordId: interaction.user.id,
+        expiresAt: expires
+      });
 
       const embed = new EmbedBuilder()
         .setTitle('🔐 Código de Verificação')
         .setDescription(
           `Seu código é:\n\n` +
           `\`\`\`\n${code}\n\`\`\`\n\n` +
-          `Use este código no jogo do Roblox.\n` +
+          `⏳ Expira em 10 minutos.\n` +
           `⚠️ Não compartilhe com ninguém.`
         )
         .setColor(0x00ff00);
 
       await interaction.reply({
-        embeds: [embed]
+        embeds: [embed],
+        ephemeral: true
       });
     }
   }
