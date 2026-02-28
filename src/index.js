@@ -13,7 +13,6 @@ const {
 const express = require('express');
 const mongoose = require('mongoose');
 
-
 // ==========================
 // CLIENT
 // ==========================
@@ -24,7 +23,6 @@ const client = new Client({
     GatewayIntentBits.GuildMembers
   ]
 });
-
 
 // ==========================
 // MONGODB
@@ -43,7 +41,6 @@ const verificationSchema = new mongoose.Schema({
 });
 
 const Verification = mongoose.model("Verification", verificationSchema);
-
 
 // ==========================
 // SLASH COMMAND
@@ -69,7 +66,6 @@ async function registerCommands() {
   );
   console.log("✅ Slash command registrado.");
 }
-
 
 // ==========================
 // INTERAÇÕES
@@ -111,7 +107,6 @@ client.on('interactionCreate', async (interaction) => {
       });
     }
   }
-
 
   // =====================
   // BOTÃO
@@ -176,7 +171,7 @@ client.on('interactionCreate', async (interaction) => {
       });
 
       // =====================
-      // EMBED 1 - CÓDIGO
+      // EMBEDS
       // =====================
 
       const embed1 = {
@@ -195,63 +190,51 @@ ${code}
         color: 0x2b2d31
       };
 
-      // =====================
-      // EMBED 2 - TUTORIAL 1
-      // =====================
-
       const embed2 = {
         title: "📘 Passo 1",
         description: "Entre no jogo e abra o painel de verificação clicando no botão abaixo.",
-        image: {
-          url: "https://media.discordapp.net/attachments/1477369538600501319/1477369721635471534/image.png?ex=69a48345&is=69a331c5&hm=b3d67315a79116f437532edb48d9a6bbb2fb38a694af238f4067ddcf1ff43a39&=&format=webp&quality=lossless"
-        },
+        image: { url: "https://media.discordapp.net/attachments/1477369538600501319/1477369721635471534/image.png?ex=69a48345&is=69a331c5&hm=b3d67315a79116f437532edb48d9a6bbb2fb38a694af238f4067ddcf1ff43a39&=&format=webp&quality=lossless" },
         color: 0x2b2d31
       };
-
-      // =====================
-      // EMBED 3 - TUTORIAL 2
-      // =====================
 
       const embed3 = {
         title: "📘 Passo 2",
         description: "Copie o código que foi enviado.",
-        image: {
-          url: "https://media.discordapp.net/attachments/1477369538600501319/1477369721941921804/content.png?ex=69a48345&is=69a331c5&hm=412c9bac314a195d29bee5b9390818f5a0b59459ff94c7b1640e8da58b6184ce&=&format=webp&quality=lossless"
-        },
+        image: { url: "https://media.discordapp.net/attachments/1477369538600501319/1477369721941921804/content.png?ex=69a48345&is=69a331c5&hm=412c9bac314a195d29bee5b9390818f5a0b59459ff94c7b1640e8da58b6184ce&=&format=webp&quality=lossless" },
         color: 0x2b2d31
       };
-
-      // =====================
-      // EMBED 4 - TUTORIAL 3
-      // =====================
 
       const embed4 = {
         title: "📘 Passo 3",
         description: "Cole o código no campo indicado.",
-        image: {
-          url: "https://media.discordapp.net/attachments/1477369538600501319/1477369722247971048/Sem_titulo2.png?ex=69a48345&is=69a331c5&hm=0c0a80e109d1c964d03dc638bbd7f02eb5b5b45347fc71a910ad48f5d004d9c8&=&format=webp&quality=lossless"
-        },
+        image: { url: "https://media.discordapp.net/attachments/1477369538600501319/1477369722247971048/Sem_titulo2.png?ex=69a48345&is=69a331c5&hm=0c0a80e109d1c964d03dc638bbd7f02eb5b5b45347fc71a910ad48f5d004d9c8&=&format=webp&quality=lossless" },
         color: 0x2b2d31
       };
-
-      // =====================
-      // EMBED 5 - TUTORIAL 4
-      // =====================
 
       const embed5 = {
         title: "📘 Finalização",
         description: "Clique no botão 'Verificar' e pronto.",
-        image: {
-          url: "https://media.discordapp.net/attachments/1477369538600501319/1477369722570801222/Sem_titulo.png?ex=69a48346&is=69a331c6&hm=8a841890697d3d584e2b485c4b8a883fb3f84b02d81cd8d0d0e1bcdae7483ed0&=&format=webp&quality=lossless"
-        },
+        image: { url: "https://media.discordapp.net/attachments/1477369538600501319/1477369722570801222/Sem_titulo.png?ex=69a48346&is=69a331c6&hm=8a841890697d3d584e2b485c4b8a883fb3f84b02d81cd8d0d0e1bcdae7483ed0&=&format=webp&quality=lossless" },
         color: 0x2b2d31
       };
 
+      // =====================
+      // ENVIO DOS EMBEDS
+      // =====================
+
       await ticket.send({ content: `${interaction.user}`, embeds: [embed1] });
-      await ticket.send({ embeds: [embed2] });
-      await ticket.send({ embeds: [embed3] });
-      await ticket.send({ embeds: [embed4] });
-      await ticket.send({ embeds: [embed5] });
+
+      // Função auxiliar para enviar embed e depois imagem
+      async function sendEmbedWithImage(ticket, embed) {
+        const { image, ...embedNoImage } = embed;
+        if (embedNoImage) await ticket.send({ embeds: [embedNoImage] });
+        if (image) await ticket.send({ content: image.url });
+      }
+
+      await sendEmbedWithImage(ticket, embed2);
+      await sendEmbedWithImage(ticket, embed3);
+      await sendEmbedWithImage(ticket, embed4);
+      await sendEmbedWithImage(ticket, embed5);
 
       await interaction.reply({
         content: `✅ Ticket criado: ${ticket}`,
@@ -261,7 +244,6 @@ ${code}
   }
 
 });
-
 
 // ==========================
 // API EXPRESS
@@ -321,7 +303,6 @@ app.post('/api/redeem', async (req, res) => {
   }
 
 });
-
 
 // ==========================
 // START
