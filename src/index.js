@@ -59,6 +59,41 @@ app.post('/api/redeem', async (req, res) => {
     return res.status(400).json({ success: false, message: 'Código expirado.' });
   }
 
+  try {
+
+    const guild = await client.guilds.fetch(process.env.GUILD_ID);
+    const member = await guild.members.fetch(verification.discordId);
+
+    // DAR CARGO
+    await member.roles.add(process.env.VERIFIED_ROLE_ID);
+
+    // FECHAR TICKET (deletar canal)
+    const ticketChannel = guild.channels.cache.find(
+      c => c.name === `verificacao-${verification.discordId}`
+    );
+
+    if (ticketChannel) {
+      await ticketChannel.delete();
+    }
+
+    verification.used = true;
+    verification.robloxId = robloxId;
+    await verification.save();
+
+    return res.json({
+      success: true,
+      message: 'Verificação realizada com sucesso!'
+    });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      message: 'Erro ao finalizar verificação.'
+    });
+  }
+
+});
   // Marcar como usado
   verification.used = true;
   await verification.save();
