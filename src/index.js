@@ -68,6 +68,16 @@ async function registerCommands() {
 }
 
 // ==========================
+// FUNÇÃO AUXILIAR PARA ENVIAR EMBED + IMAGEM FORA
+// ==========================
+
+async function sendEmbedWithImage(ticket, embed) {
+  const { image, ...embedNoImage } = embed;
+  if (embedNoImage) await ticket.send({ embeds: [embedNoImage] });
+  if (image) await ticket.send({ content: image.url });
+}
+
+// ==========================
 // INTERAÇÕES
 // ==========================
 
@@ -118,7 +128,7 @@ client.on('interactionCreate', async (interaction) => {
 
       const guild = interaction.guild;
 
-      // RESPONDE A INTERAÇÃO IMEDIATAMENTE PARA EVITAR "INTERACTION FAILED"
+      // RESPONDE IMEDIATAMENTE PARA EVITAR ERRO "INTERACTION FAILED"
       await interaction.deferReply({ ephemeral: true });
 
       // impedir discord já verificado
@@ -164,6 +174,7 @@ client.on('interactionCreate', async (interaction) => {
         ]
       });
 
+      // gera código único
       const code = Math.floor(100000 + Math.random() * 900000).toString();
 
       await Verification.create({
@@ -201,7 +212,7 @@ ${code}
       const embed3 = {
         title: "📘 Passo 2",
         description: "Copie o código que foi enviado.",
-        image: { url: "https://cdn.discordapp.com/attachments/1477374566341808309/1477375869017391216/image.png?ex=69a488ff&is=69a3377f&hm=ded1cec6af1fdad3e338fc5d2817859c83be8604dd9a1c748213b876a95ee899&" },
+        image: { url: "https://cdn.discordapp.com/attachments/1477377208694739167/1477377996766707733/image.png?ex=69a48afa&is=69a3397a&hm=34934fb3e4e9adce077653f66d2bcc874346e50a64f82eec49c38f9757a5037e&" },
         color: 0x2b2d31
       };
 
@@ -220,17 +231,7 @@ ${code}
       };
 
       // =====================
-      // FUNÇÃO AUXILIAR PARA ENVIAR EMBED + IMAGEM FORA
-      // =====================
-
-      async function sendEmbedWithImage(ticket, embed) {
-        const { image, ...embedNoImage } = embed;
-        if (embedNoImage) await ticket.send({ embeds: [embedNoImage] });
-        if (image) await ticket.send({ content: image.url });
-      }
-
-      // =====================
-      // ENVIO DOS EMBEDS
+      // ENVIO DOS EMBEDS E IMAGENS
       // =====================
 
       await ticket.send({ content: `${interaction.user}`, embeds: [embed1] });
@@ -240,10 +241,11 @@ ${code}
       await sendEmbedWithImage(ticket, embed4);
       await sendEmbedWithImage(ticket, embed5);
 
-      // EDITA A RESPOSTA DO DEFER
+      // finaliza interação do botão
       await interaction.editReply({
         content: `✅ Ticket criado: ${ticket}`
       });
+
     }
   }
 
