@@ -240,7 +240,7 @@ ${code}
 
       const embed5 = {
         title: "📘 Finalização",
-        description: "Clique no botão "Verificar" e pronto.",
+        description: "Clique no botão 'Verificar' e pronto.",
         image: {
           url: "https://cdn.discordapp.com/attachments/1477356237187190977/1477362496338788382/Sem_titulo2.png?ex=69a47c8b&is=69a32b0b&hm=6a8b06e9a75c86f1c5724a71148740cbb9ce20abecb9f8b71ee8e2ede5e73faf&"
         },
