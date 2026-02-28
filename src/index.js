@@ -203,7 +203,7 @@ ${code}
         title: "📘 Passo 1",
         description: "Entre no jogo e abra o painel de verificação apertando no botão abaixo.",
         image: {
-          url: "https://cdn.discordapp.com/attachments/1477380702201975117/1477381295918285100/image.png?ex=69a48e0d&is=69a33c8d&hm=e5c80174dd96d455c1007093f4cef73443c84b30346b101d1749ee424a4fb487&"
+          url: "https://cdn.discordapp.com/attachments/1477382168404693093/1477382969235603538/image.png?ex=69a48f9c&is=69a33e1c&hm=3b268cd62aaa2bc7bab32f804daa9244dc6765c7503ebb2466580ce05c04b41a&"
         },
         color: 0x2b2d31
       };
@@ -229,7 +229,7 @@ ${code}
         title: "📘 Passo 3",
         description: "Coloque o código no campo indicado.",
         image: {
-          url: "https://cdn.discordapp.com/attachments/1477380702201975117/1477381491217399974/image.png?ex=69a48e3b&is=69a33cbb&hm=085887153d7f4ed3ac65f19b810828d0e32ce6ebeefcd6c55279005f6c88a368&"
+          url: "https://cdn.discordapp.com/attachments/1477382168404693093/1477382332326351112/image.png?ex=69a48f04&is=69a33d84&hm=3419f85159bd1ff0241d61ef7a64e1232f441e20e5a901286915215805cfd846&"
         },
         color: 0x2b2d31
       };
@@ -242,7 +242,7 @@ ${code}
         title: "📘 Finalização",
         description: "Aperte no botão 'Verificar' e pronto.",
         image: {
-          url: "https://cdn.discordapp.com/attachments/1477380702201975117/1477381296660680805/image.png?ex=69a48e0d&is=69a33c8d&hm=2958715a8c5decc2c8a16d01753e7d50b9c207ac126e0021f512235f0585340a&"
+          url: "https://cdn.discordapp.com/attachments/1477382168404693093/1477382593849852005/image.png?ex=69a48f42&is=69a33dc2&hm=50458dcf0d794ba491e4cf5ac5f6599d7e113cd52ea28188c0a1ba225a730ca1&"
         },
         color: 0x2b2d31
       };
