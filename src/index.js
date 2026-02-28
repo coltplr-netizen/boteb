@@ -20,7 +20,7 @@ const {
 
 
 // =======================
-// EXPRESS (API Railway)
+// EXPRESS (Railway)
 // =======================
 
 const app = express();
@@ -103,120 +103,42 @@ client.on(Events.InteractionCreate, async interaction => {
   }
 
   // =====================
-  // BOTÃO
+  // BOTÕES
   // =====================
   if (interaction.isButton()) {
 
-  const guild = interaction.guild;
-  const member = interaction.member;
+    const guild = interaction.guild;
+    const member = interaction.member;
 
-  // ===============================
-  // BOTÃO 1 - CRIAR TICKET
-  // ===============================
-  if (interaction.customId === 'iniciar_verificacao') {
+    // ===================================
+    // BOTÃO 1 - CRIAR TICKET
+    // ===================================
+    if (interaction.customId === 'iniciar_verificacao') {
 
-    // Procurar categoria
-    let category = guild.channels.cache.find(
-      c => c.name === '🔐 Verificações' && c.type === ChannelType.GuildCategory
-    );
+      let category = guild.channels.cache.find(
+        c => c.name === '🔐 Verificações' && c.type === ChannelType.GuildCategory
+      );
 
-    if (!category) {
-      category = await guild.channels.create({
-        name: '🔐 Verificações',
-        type: ChannelType.GuildCategory
-      });
-    }
+      if (!category) {
+        category = await guild.channels.create({
+          name: '🔐 Verificações',
+          type: ChannelType.GuildCategory
+        });
+      }
 
-    // Verificar se já tem ticket
-    const existingChannel = guild.channels.cache.find(
-      c => c.name === `verificacao-${member.user.id}`
-    );
-
-    if (existingChannel) {
-      return interaction.reply({
-        content: `Você já possui um ticket aberto em ${existingChannel}.`,
-        ephemeral: true
-      });
-    }
-
-    // Criar canal privado
-    const channel = await guild.channels.create({
-      name: `verificacao-${member.user.id}`,
-      type: ChannelType.GuildText,
-      parent: category.id,
-      permissionOverwrites: [
-        {
-          id: guild.id,
-          deny: [PermissionsBitField.Flags.ViewChannel]
-        },
-        {
-          id: member.id,
-          allow: [PermissionsBitField.Flags.ViewChannel]
-        },
-        {
-          id: client.user.id,
-          allow: [PermissionsBitField.Flags.ViewChannel]
-        }
-      ]
-    });
-
-    // Botão começar verificação
-    const startButton = new ButtonBuilder()
-      .setCustomId('comecar_verificacao')
-      .setLabel('Começar verificação')
-      .setStyle(ButtonStyle.Primary);
-
-    const row = new ActionRowBuilder().addComponents(startButton);
-
-    await channel.send({
-      content: `👋 Olá ${member}, clique no botão abaixo para começar sua verificação.`,
-      components: [row]
-    });
-
-    await interaction.reply({
-      content: `✅ Seu ticket foi criado em ${channel}`,
-      ephemeral: true
-    });
-  }
-
-  // ===============================
-  // BOTÃO 2 - GERAR CÓDIGO
-  // ===============================
-  if (interaction.customId === 'comecar_verificacao') {
-
-    const code = crypto.randomBytes(4).toString('hex').toUpperCase();
-
-    const embed = new EmbedBuilder()
-      .setTitle('🔐 Código de Verificação')
-      .setDescription(
-        `Seu código é:\n\n` +
-        `\`\`\`\n${code}\n\`\`\`\n\n` +
-        `Use este código no jogo do Roblox.\n` +
-        `⚠️ Não compartilhe com ninguém.`
-      )
-      .setColor(0x00ff00);
-
-    await interaction.reply({
-      embeds: [embed]
-    });
-  }
-}
-
-      // Verificar se já existe canal para esse usuário
       const existingChannel = guild.channels.cache.find(
-        c => c.name === `verificacao-${member.user.username}`
+        c => c.name === `verificacao-${member.user.id}`
       );
 
       if (existingChannel) {
         return interaction.reply({
-          content: 'Você já possui um ticket aberto.',
+          content: `Você já possui um ticket aberto em ${existingChannel}.`,
           ephemeral: true
         });
       }
 
-      // Criar canal privado
       const channel = await guild.channels.create({
-        name: `verificacao-${member.user.username}`,
+        name: `verificacao-${member.user.id}`,
         type: ChannelType.GuildText,
         parent: category.id,
         permissionOverwrites: [
@@ -235,24 +157,43 @@ client.on(Events.InteractionCreate, async interaction => {
         ]
       });
 
-      // Gerar código seguro (8 caracteres reais)
+      const startButton = new ButtonBuilder()
+        .setCustomId('comecar_verificacao')
+        .setLabel('Começar verificação')
+        .setStyle(ButtonStyle.Primary);
+
+      const row = new ActionRowBuilder().addComponents(startButton);
+
+      await channel.send({
+        content: `👋 Olá ${member}, clique no botão abaixo para começar sua verificação.`,
+        components: [row]
+      });
+
+      await interaction.reply({
+        content: `✅ Seu ticket foi criado em ${channel}`,
+        ephemeral: true
+      });
+    }
+
+    // ===================================
+    // BOTÃO 2 - GERAR CÓDIGO
+    // ===================================
+    if (interaction.customId === 'comecar_verificacao') {
+
       const code = crypto.randomBytes(4).toString('hex').toUpperCase();
 
       const embed = new EmbedBuilder()
-        .setTitle('🔐 Verificação Iniciada')
+        .setTitle('🔐 Código de Verificação')
         .setDescription(
-          `Seu código de verificação é:\n\n` +
+          `Seu código é:\n\n` +
           `\`\`\`\n${code}\n\`\`\`\n\n` +
           `Use este código no jogo do Roblox.\n` +
-          `⚠️ Este código poderá ser usado apenas uma vez.`
+          `⚠️ Não compartilhe com ninguém.`
         )
         .setColor(0x00ff00);
 
-      await channel.send({ embeds: [embed] });
-
       await interaction.reply({
-        content: 'Seu ticket foi criado!',
-        ephemeral: true
+        embeds: [embed]
       });
     }
   }
