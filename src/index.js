@@ -33,6 +33,44 @@ app.get('/', (req, res) => {
   res.send('API do Bot funcionando 🚀');
 });
 
+// =======================
+// API - REDEEM CODE
+// =======================
+
+app.post('/api/redeem', async (req, res) => {
+
+  const { code, robloxId } = req.body;
+
+  if (!code || !robloxId) {
+    return res.status(400).json({ success: false, message: 'Dados inválidos.' });
+  }
+
+  const verification = await Verification.findOne({ code: code });
+
+  if (!verification) {
+    return res.status(404).json({ success: false, message: 'Código não encontrado.' });
+  }
+
+  if (verification.used) {
+    return res.status(400).json({ success: false, message: 'Código já utilizado.' });
+  }
+
+  if (verification.expiresAt < new Date()) {
+    return res.status(400).json({ success: false, message: 'Código expirado.' });
+  }
+
+  // Marcar como usado
+  verification.used = true;
+  await verification.save();
+
+  return res.json({
+    success: true,
+    message: 'Verificação realizada com sucesso!',
+    discordId: verification.discordId
+  });
+
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor HTTP rodando na porta ${PORT}`);
 });
