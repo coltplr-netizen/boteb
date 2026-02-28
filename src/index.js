@@ -203,7 +203,7 @@ ${code}
         title: "📘 Passo 1",
         description: "Entre no jogo e abra o painel de verificação apertando no botão abaixo.",
         image: {
-          url: "https://cdn.discordapp.com/attachments/1477385970193268797/1477386051633942689/image.png?ex=69a4927b&is=69a340fb&hm=3faa7cb0016c713cd9a8c0fbe878c73c2515b470f15e5c4d8ad68fd82404965e&"
+          url: "https://cdn.discordapp.com/attachments/1476738031334592653/1477386849977893016/image.png?ex=69a49339&is=69a341b9&hm=622dbc9266f752aca5c6cae736704bb1311ba1551f9c084524d2d36bbc68495f&"
         },
         color: 0x2b2d31
       };
